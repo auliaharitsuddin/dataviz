@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useDataset } from "@/lib/store/dataset-context";
+import { useLanguage } from "@/lib/store/language-context";
 import { UploadDropzone } from "@/components/dashboard/upload-dropzone";
 import { WarningsBanner } from "@/components/dashboard/warnings-banner";
 import { KpiCards } from "@/components/dashboard/kpi-cards";
@@ -16,23 +17,23 @@ import { ChartType } from "@/lib/chart-types";
 
 export default function Home() {
   const { dataset, status, error, activeSheetIndex, setActiveSheetIndex } = useDataset();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (status === "error" && error) {
-      toast.error("Upload failed", { description: error });
+      toast.error(t.uploadFailedTitle, { description: error });
     }
-  }, [status, error]);
+  }, [status, error, t]);
 
   if (!dataset) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-8 px-4 py-12">
         <div className="max-w-xl space-y-3 text-center">
           <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-            Turn your files into live dashboards
+            {t.heroTitle}
           </h1>
           <p className="text-sm text-muted-foreground sm:text-base">
-            Upload an Excel spreadsheet, Word document, or PDF report. DataViz Hub finds the tables inside and
-            turns them into interactive charts — right in your browser.
+            {t.heroSubtitle}
           </p>
         </div>
         <div className="w-full max-w-xl">
@@ -78,6 +79,7 @@ function Dashboard({
 }
 
 function SheetExplorer({ sheet, datasetWarnings }: { sheet: ParsedSheet; datasetWarnings: string[] }) {
+  const { t } = useLanguage();
   const [xKey, setXKey] = useState(sheet.columns[0]?.key ?? "");
   const [yKey, setYKey] = useState<string | null>(sheet.columns.find((c) => c.type === "number")?.key ?? null);
   const [chartType, setChartType] = useState<ChartType>("bar");
@@ -91,7 +93,7 @@ function SheetExplorer({ sheet, datasetWarnings }: { sheet: ParsedSheet; dataset
   const warnings = [
     ...datasetWarnings,
     ...(sheet.truncated
-      ? [`"${sheet.name}" has more rows than shown — displaying the first ${MAX_ROWS_PER_SHEET.toLocaleString()} for performance.`]
+      ? [t.truncatedWarning(sheet.name, MAX_ROWS_PER_SHEET.toLocaleString())]
       : []),
   ];
 

@@ -13,10 +13,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ParsedSheet } from "@/lib/parsers/types";
+import { useLanguage } from "@/lib/store/language-context";
 
 const PAGE_SIZE = 25;
 
 export function DataTable({ sheet, search }: { sheet: ParsedSheet; search: string }) {
+  const { t } = useLanguage();
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(0);
@@ -104,7 +106,7 @@ export function DataTable({ sheet, search }: { sheet: ParsedSheet; search: strin
             {pageRows.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={sheet.columns.length} className="h-24 text-center text-muted-foreground">
-                  No rows match your search.
+                  {t.noRowsMatch}
                 </TableCell>
               </TableRow>
             ) : (
@@ -128,8 +130,8 @@ export function DataTable({ sheet, search }: { sheet: ParsedSheet; search: strin
       <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
         <span>
           {sorted.length === 0
-            ? "0 rows"
-            : `Showing ${clampedPage * PAGE_SIZE + 1}–${Math.min(sorted.length, (clampedPage + 1) * PAGE_SIZE)} of ${sorted.length} rows`}
+            ? t.zeroRows
+            : t.showingRows(clampedPage * PAGE_SIZE + 1, Math.min(sorted.length, (clampedPage + 1) * PAGE_SIZE), sorted.length)}
         </span>
         <div className="flex items-center gap-1">
           <Button
@@ -137,20 +139,20 @@ export function DataTable({ sheet, search }: { sheet: ParsedSheet; search: strin
             size="icon-sm"
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={clampedPage === 0}
-            aria-label="Previous page"
+            aria-label={t.prevPage}
             className="cursor-pointer"
           >
             <ChevronLeft className="size-4" aria-hidden />
           </Button>
           <span className="min-w-16 text-center text-xs">
-            Page {clampedPage + 1} / {pageCount}
+            {t.pageOf(clampedPage + 1, pageCount)}
           </span>
           <Button
             variant="outline"
             size="icon-sm"
             onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
             disabled={clampedPage >= pageCount - 1}
-            aria-label="Next page"
+            aria-label={t.nextPage}
             className="cursor-pointer"
           >
             <ChevronRight className="size-4" aria-hidden />

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { DatasetProvider } from "@/lib/store/dataset-context";
+import { LanguageProvider } from "@/lib/store/language-context";
 import { Toaster } from "@/components/ui/sonner";
 import { AppHeader } from "@/components/dashboard/app-header";
 
@@ -30,10 +31,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className="min-h-full flex flex-col bg-background text-foreground"
         suppressHydrationWarning
       >
-        <DatasetProvider>
-          <AppHeader />
-          <main className="flex flex-1 flex-col">{children}</main>
-        </DatasetProvider>
+        <LanguageProvider>
+          <DatasetProvider>
+            <AppHeader />
+            <main className="flex flex-1 flex-col">{children}</main>
+          </DatasetProvider>
+        </LanguageProvider>
         <Toaster position="top-right" richColors />
       </body>
     </html>

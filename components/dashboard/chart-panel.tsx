@@ -21,6 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartPoint } from "@/lib/aggregate";
 import { CHART_COLORS } from "@/lib/chart-colors";
 import { ChartType } from "@/lib/chart-types";
+import { useLanguage } from "@/lib/store/language-context";
 
 function EmptyChart({ message }: { message: string }) {
   return (
@@ -39,18 +40,19 @@ export function ChartPanel({
   xLabel: string;
   yLabel: string;
 }) {
+  const { t } = useLanguage();
   return (
     <Card className="gap-3">
       <CardHeader>
         <CardTitle>
-          {yLabel} by {xLabel}
+          {t.chartTitle(yLabel, xLabel)}
         </CardTitle>
       </CardHeader>
       <CardContent>
         {data.length === 0 ? (
-          <EmptyChart message="No numeric column selected yet — pick a measure above to see a chart." />
+          <EmptyChart message={t.chartEmpty} />
         ) : (
-          <div className="h-72 w-full" role="img" aria-label={`${chartType} chart of ${yLabel} by ${xLabel}`}>
+          <div className="h-72 w-full" role="img" aria-label={t.chartAriaLabel(chartType, yLabel, xLabel)}>
             <ResponsiveContainer width="100%" height="100%">
               {chartType === "bar" ? (
                 <BarChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>

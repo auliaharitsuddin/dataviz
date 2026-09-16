@@ -2,6 +2,7 @@ import { Hash, Rows3, Sigma, Columns3 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ParsedSheet } from "@/lib/parsers/types";
 import { formatNumber } from "@/lib/aggregate";
+import { useLanguage } from "@/lib/store/language-context";
 
 function Kpi({ icon: Icon, label, value }: { icon: typeof Hash; label: string; value: string }) {
   return (
@@ -20,6 +21,7 @@ function Kpi({ icon: Icon, label, value }: { icon: typeof Hash; label: string; v
 }
 
 export function KpiCards({ sheet }: { sheet: ParsedSheet }) {
+  const { t } = useLanguage();
   const numericCol = sheet.columns.find((c) => c.type === "number");
   const sum = numericCol
     ? sheet.rows.reduce((acc, r) => acc + (typeof r[numericCol.key] === "number" ? (r[numericCol.key] as number) : 0), 0)
@@ -28,17 +30,17 @@ export function KpiCards({ sheet }: { sheet: ParsedSheet }) {
 
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      <Kpi icon={Rows3} label="Total rows" value={formatNumber(sheet.rows.length)} />
-      <Kpi icon={Columns3} label="Total columns" value={formatNumber(sheet.columns.length)} />
+      <Kpi icon={Rows3} label={t.kpiTotalRows} value={formatNumber(sheet.rows.length)} />
+      <Kpi icon={Columns3} label={t.kpiTotalColumns} value={formatNumber(sheet.columns.length)} />
       {numericCol ? (
         <>
-          <Kpi icon={Sigma} label={`Sum of ${numericCol.label}`} value={formatNumber(sum)} />
-          <Kpi icon={Hash} label={`Avg of ${numericCol.label}`} value={formatNumber(avg)} />
+          <Kpi icon={Sigma} label={t.kpiSumOf(numericCol.label)} value={formatNumber(sum)} />
+          <Kpi icon={Hash} label={t.kpiAvgOf(numericCol.label)} value={formatNumber(avg)} />
         </>
       ) : (
         <>
-          <Kpi icon={Sigma} label="Numeric columns" value="0" />
-          <Kpi icon={Hash} label="Text columns" value={formatNumber(sheet.columns.length)} />
+          <Kpi icon={Sigma} label={t.kpiNumericColumns} value="0" />
+          <Kpi icon={Hash} label={t.kpiTextColumns} value={formatNumber(sheet.columns.length)} />
         </>
       )}
     </div>

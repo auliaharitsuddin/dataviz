@@ -12,6 +12,7 @@ Turn spreadsheets, Word documents, and PDF reports into interactive dashboards, 
 
 ## All features
 
+- Indonesian/English language toggle in the header (`lib/store/language-context.tsx`, `messages/`), persisted in `localStorage`.
 - File upload via drag-and-drop dropzone (`components/dashboard/upload-dropzone.tsx`)
 - Multi-sheet support with tab switching (`app/page.tsx`)
 - Chart types: bar, line, area, pie (`lib/chart-types.ts`, `components/dashboard/chart-panel.tsx`)
@@ -75,6 +76,7 @@ Ubah spreadsheet, dokumen Word, dan laporan PDF menjadi dashboard interaktif lan
 
 ## Semua fitur
 
+- Toggle bahasa Indonesia/Inggris di header (`lib/store/language-context.tsx`, `messages/`), tersimpan di `localStorage`.
 - Unggah file via dropzone drag-and-drop (`components/dashboard/upload-dropzone.tsx`)
 - Dukungan multi-sheet dengan tab untuk berpindah (`app/page.tsx`)
 - Jenis grafik: bar, line, area, pie (`lib/chart-types.ts`, `components/dashboard/chart-panel.tsx`)
